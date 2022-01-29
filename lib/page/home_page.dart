@@ -11,6 +11,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      print('object'); // Chamado depois que monta um widget
+    });
   }
 
   @override
