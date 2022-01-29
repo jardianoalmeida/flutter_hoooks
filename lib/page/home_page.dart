@@ -1,31 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class HomePage extends StatefulWidget {
+final _counter = Counter();
+
+class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    final controller = useListenable(_counter);
+    final textController = useTextEditingController();
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          Center(
+            child: Text('${controller.value}'),
+          ),
+          TextField(
+            controller: textController,
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.increment();
+        },
+      ),
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(vsync: this);
-    controller.forward();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+class Counter extends ChangeNotifier {
+  int value = 0;
+  increment() {
+    value++;
+    notifyListeners();
   }
 }
